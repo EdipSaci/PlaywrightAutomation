@@ -7,7 +7,7 @@
     "tests": "playwright test",
     "test:specific": "playwright test ./tests/**/assertion-methods1.test.js",
     "report": "playwright show-report",
-    "test:tag": "playwright test --grep @smoke" 
+    "test:tag": "playwright test --grep @smoke"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +17,7 @@
     "@types/node": "^22.5.5"
   },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "nodemailer": "*"
   }
 }
