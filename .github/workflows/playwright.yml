@@ -4,38 +4,30 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
-
     - name: Install dependencies
-      run: npm install
-
+      run: npm install -g yarn && yarn
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-
+      run: yarn playwright install --with-deps
     - name: Run Playwright tests
-      run: npx playwright test
-
-    - name: Zip the Playwright Report
-      run: zip -r playwright-report.zip playwright-report/
-
-    - name: Send Test Report via Email
-      run: node send-report-email.js
+      run: yarn playwright test
+    - name: Send email report
+      if: ${{ always() }}
+      run: node send-email.js
       env:
+        EMAIL_SERVICE: smtp.gmail.com
+        EMAIL_PORT: 587
         EMAIL_USER: ${{ secrets.EMAIL_USER }}
-        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-        EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
-        EMAIL_TO: ${{ secrets.EMAIL_TO }}
-
+        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        EMAIL_TO: recipient@example.com
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
